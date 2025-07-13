@@ -11,18 +11,65 @@ export function Calculator() {
   const [previousValue, setPreviousValue] = useState<number | null>(null);
   const [operation, setOperation] = useState<string | null>(null);
   const [waitingForOperand, setWaitingForOperand] = useState(false);
+  const [pendingFunction, setPendingFunction] = useState<string | null>(null);
   const [mode, setMode] = useState<CalculatorMode>('basic');
   const [memory, setMemory] = useState<number>(0);
   const [angleMode, setAngleMode] = useState<'deg' | 'rad'>('deg');
 
   const inputNumber = useCallback((num: string) => {
-    if (waitingForOperand) {
+    if (waitingForOperand || pendingFunction) {
       setDisplay(num);
       setWaitingForOperand(false);
+      if (pendingFunction) {
+        // Execute pending function with the new number
+        const inputValue = parseFloat(num);
+        let result: number | string = 0;
+        
+        switch (pendingFunction) {
+          case 'sqrt':
+            result = calc.squareRoot(inputValue);
+            break;
+          case 'cbrt':
+            result = calc.cubicRoot(inputValue);
+            break;
+          case 'sin':
+            result = angleMode === 'deg' ? calc.sinDeg(inputValue) : Math.sin(inputValue);
+            break;
+          case 'cos':
+            result = angleMode === 'deg' ? calc.cosDeg(inputValue) : Math.cos(inputValue);
+            break;
+          case 'tan':
+            result = angleMode === 'deg' ? calc.tanDeg(inputValue) : Math.tan(inputValue);
+            break;
+          case 'ln':
+            result = inputValue > 0 ? Math.log(inputValue) : 'Error: Invalid input';
+            break;
+          case 'log':
+            result = inputValue > 0 ? Math.log10(inputValue) : 'Error: Invalid input';
+            break;
+          case 'factorial':
+            result = calc.factorial(inputValue);
+            break;
+          case '1/x':
+            result = inputValue !== 0 ? 1 / inputValue : 'Error: Division by zero';
+            break;
+          case 'x²':
+            result = calc.power(inputValue, 2);
+            break;
+          case 'x³':
+            result = calc.power(inputValue, 3);
+            break;
+        }
+        
+        setDisplay(typeof result === 'string' ? result : String(result));
+        setPendingFunction(null);
+        setWaitingForOperand(true);
+        return;
+      }
     } else {
       setDisplay(display === '0' ? num : display + num);
     }
-  }, [display, waitingForOperand]);
+  }, [display, waitingForOperand, pendingFunction, angleMode]);
 
   const inputDot = useCallback(() => {
     if (waitingForOperand) {
@@ -38,6 +85,7 @@ export function Calculator() {
     setPreviousValue(null);
     setOperation(null);
     setWaitingForOperand(false);
+    setPendingFunction(null);
   }, []);
 
   const performOperation = useCallback((nextOperation: string) => {
@@ -93,56 +141,35 @@ export function Calculator() {
   }, [performOperation]);
 
   const performFunction = useCallback((func: string) => {
-    const inputValue = parseFloat(display);
-    let result: number | string = 0;
-
-    switch (func) {
-      case 'sqrt':
-        result = calc.squareRoot(inputValue);
-        break;
-      case 'cbrt':
-        result = calc.cubicRoot(inputValue);
-        break;
-      case 'sin':
-        result = angleMode === 'deg' ? calc.sinDeg(inputValue) : Math.sin(inputValue);
-        break;
-      case 'cos':
-        result = angleMode === 'deg' ? calc.cosDeg(inputValue) : Math.cos(inputValue);
-        break;
-      case 'tan':
-        result = angleMode === 'deg' ? calc.tanDeg(inputValue) : Math.tan(inputValue);
-        break;
-      case 'ln':
-        result = inputValue > 0 ? Math.log(inputValue) : 'Error: Invalid input';
-        break;
-      case 'log':
-        result = inputValue > 0 ? Math.log10(inputValue) : 'Error: Invalid input';
-        break;
-      case 'factorial':
-        result = calc.factorial(inputValue);
-        break;
-      case '1/x':
-        result = inputValue !== 0 ? 1 / inputValue : 'Error: Division by zero';
-        break;
-      case 'x²':
-        result = calc.power(inputValue, 2);
-        break;
-      case 'x³':
-        result = calc.power(inputValue, 3);
-        break;
-      case 'pi':
-        result = Math.PI;
-        break;
-      case 'e':
-        result = Math.E;
-        break;
-      default:
-        return;
+    // Handle constants immediately
+    if (func === 'pi' || func === 'e') {
+      const result = func === 'pi' ? Math.PI : Math.E;
+      setDisplay(String(result));
+      setWaitingForOperand(true);
+      return;
     }
 
-    setDisplay(typeof result === 'string' ? result : String(result));
-    setWaitingForOperand(true);
-  }, [display, angleMode]);
+    // For functions that need input, show the symbol and wait for number
+    const functionSymbols: { [key: string]: string } = {
+      'sqrt': '√(',
+      'cbrt': '∛(',
+      'sin': 'sin(',
+      'cos': 'cos(',
+      'tan': 'tan(',
+      'ln': 'ln(',
+      'log': 'log(',
+      'factorial': '!(',
+      '1/x': '1/(',
+      'x²': 'sqr(',
+      'x³': 'cube(',
+    };
+
+    if (functionSymbols[func]) {
+      setDisplay(functionSymbols[func]);
+      setPendingFunction(func);
+      setWaitingForOperand(true);
+    }
+  }, []);
 
   const Button_Number = ({ children, onClick, className, ...props }: any) => (
     <Button
@@ -218,6 +245,7 @@ export function Calculator() {
             <div className="text-right">
               <div className="text-sm text-muted-foreground mb-1">
                 {previousValue !== null && operation && `${previousValue} ${operation}`}
+                {pendingFunction && 'Enter number...'}
               </div>
               <div className="text-4xl font-mono text-foreground break-all">
                 {display}
