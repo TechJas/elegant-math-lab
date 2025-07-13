@@ -32,33 +32,6 @@ export function Calculator() {
           case 'cbrt':
             result = calc.cubicRoot(inputValue);
             break;
-          case 'sin':
-            result = angleMode === 'deg' ? calc.sinDeg(inputValue) : Math.sin(inputValue);
-            break;
-          case 'cos':
-            result = angleMode === 'deg' ? calc.cosDeg(inputValue) : Math.cos(inputValue);
-            break;
-          case 'tan':
-            result = angleMode === 'deg' ? calc.tanDeg(inputValue) : Math.tan(inputValue);
-            break;
-          case 'ln':
-            result = inputValue > 0 ? Math.log(inputValue) : 'Error: Invalid input';
-            break;
-          case 'log':
-            result = inputValue > 0 ? Math.log10(inputValue) : 'Error: Invalid input';
-            break;
-          case 'factorial':
-            result = calc.factorial(inputValue);
-            break;
-          case '1/x':
-            result = inputValue !== 0 ? 1 / inputValue : 'Error: Division by zero';
-            break;
-          case 'x²':
-            result = calc.power(inputValue, 2);
-            break;
-          case 'x³':
-            result = calc.power(inputValue, 3);
-            break;
         }
         
         setDisplay(typeof result === 'string' ? result : String(result));
@@ -149,19 +122,50 @@ export function Calculator() {
       return;
     }
 
+    // Handle trigonometric functions immediately (like previous version)
+    if (['sin', 'cos', 'tan', 'ln', 'log', 'factorial', '1/x', 'x²', 'x³'].includes(func)) {
+      const inputValue = parseFloat(display);
+      let result: number | string = 0;
+
+      switch (func) {
+        case 'sin':
+          result = angleMode === 'deg' ? calc.sinDeg(inputValue) : Math.sin(inputValue);
+          break;
+        case 'cos':
+          result = angleMode === 'deg' ? calc.cosDeg(inputValue) : Math.cos(inputValue);
+          break;
+        case 'tan':
+          result = angleMode === 'deg' ? calc.tanDeg(inputValue) : Math.tan(inputValue);
+          break;
+        case 'ln':
+          result = inputValue > 0 ? Math.log(inputValue) : 'Error: Invalid input';
+          break;
+        case 'log':
+          result = inputValue > 0 ? Math.log10(inputValue) : 'Error: Invalid input';
+          break;
+        case 'factorial':
+          result = calc.factorial(inputValue);
+          break;
+        case '1/x':
+          result = inputValue !== 0 ? 1 / inputValue : 'Error: Division by zero';
+          break;
+        case 'x²':
+          result = calc.power(inputValue, 2);
+          break;
+        case 'x³':
+          result = calc.power(inputValue, 3);
+          break;
+      }
+
+      setDisplay(typeof result === 'string' ? result : String(result));
+      setWaitingForOperand(true);
+      return;
+    }
+
     // For functions that need input, show the symbol and wait for number
     const functionSymbols: { [key: string]: string } = {
       'sqrt': '√(',
       'cbrt': '∛(',
-      'sin': 'sin(',
-      'cos': 'cos(',
-      'tan': 'tan(',
-      'ln': 'ln(',
-      'log': 'log(',
-      'factorial': '!(',
-      '1/x': '1/(',
-      'x²': 'sqr(',
-      'x³': 'cube(',
     };
 
     if (functionSymbols[func]) {
@@ -169,7 +173,7 @@ export function Calculator() {
       setPendingFunction(func);
       setWaitingForOperand(true);
     }
-  }, []);
+  }, [display, angleMode]);
 
   const Button_Number = ({ children, onClick, className, ...props }: any) => (
     <Button
