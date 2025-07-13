@@ -8,35 +8,54 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Calculator Theme - Deep Ocean */
+    --background: 220 30% 6%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 220 25% 8%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 220 25% 8%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 200 100% 50%;
+    --primary-foreground: 220 30% 6%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 220 20% 15%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 220 15% 20%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 270 100% 70%;
+    --accent-foreground: 220 30% 6%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 220 15% 25%;
+    --input: 220 15% 25%;
+    --ring: 200 100% 50%;
 
-    --radius: 0.5rem;
+    /* Calculator specific colors */
+    --calc-display: 220 25% 10%;
+    --calc-number: 220 15% 20%;
+    --calc-operator: 200 80% 40%;
+    --calc-function: 270 80% 50%;
+    --calc-special: 50 90% 50%;
+
+    /* Gradients */
+    --gradient-bg: linear-gradient(135deg, hsl(220 30% 6%), hsl(240 25% 12%));
+    --gradient-card: linear-gradient(145deg, hsl(220 25% 8%), hsl(220 20% 12%));
+    --gradient-primary: linear-gradient(135deg, hsl(200 100% 50%), hsl(220 100% 60%));
+    --gradient-accent: linear-gradient(135deg, hsl(270 100% 70%), hsl(290 100% 80%));
+
+    /* Shadows */
+    --shadow-glow: 0 0 20px hsl(200 100% 50% / 0.3);
+    --shadow-card: 0 8px 32px hsl(220 30% 3% / 0.5);
+    --shadow-button: 0 4px 12px hsl(220 30% 3% / 0.3);
+
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 

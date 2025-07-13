@@ -18,12 +18,17 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        calcNumber: "bg-calc-number hover:bg-calc-number/80 text-foreground font-semibold shadow-button transition-all duration-200 hover:scale-105",
+        calcOperator: "bg-calc-operator hover:bg-calc-operator/80 text-white font-semibold shadow-button transition-all duration-200 hover:scale-105",
+        calcFunction: "bg-calc-function hover:bg-calc-function/80 text-white font-semibold shadow-button transition-all duration-200 hover:scale-105",
+        calcSpecial: "bg-calc-special hover:bg-calc-special/80 text-black font-semibold shadow-button transition-all duration-200 hover:scale-105",
       },
       size: {
         default: "h-10 px-4 py-2",
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-md px-8",
         icon: "h-10 w-10",
+        calc: "h-14 text-lg",
       },
     },
     defaultVariants: {
