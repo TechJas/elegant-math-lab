@@ -157,6 +157,16 @@ export function Calculator() {
           break;
       }
 
+      // Format result for better display
+      if (typeof result === 'number') {
+        // Round to 10 decimal places to avoid floating point precision issues
+        result = Math.round(result * 10000000000) / 10000000000;
+        // If result is effectively an integer, display as integer
+        if (Math.abs(result - Math.round(result)) < 1e-10) {
+          result = Math.round(result);
+        }
+      }
+
       setDisplay(typeof result === 'string' ? result : String(result));
       setWaitingForOperand(true);
       return;
