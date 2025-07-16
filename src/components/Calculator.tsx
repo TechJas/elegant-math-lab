@@ -123,7 +123,7 @@ export function Calculator() {
     }
 
     // Handle trigonometric functions immediately (like previous version)
-    if (['sin', 'cos', 'tan', 'ln', 'log', 'factorial', '1/x', 'x²', 'x³'].includes(func)) {
+    if (['sin', 'cos', 'tan', 'sec', 'cosec', 'cot', 'ln', 'log', 'factorial', '1/x', 'x²', 'x³'].includes(func)) {
       const inputValue = parseFloat(display);
       let result: number | string = 0;
 
@@ -136,6 +136,18 @@ export function Calculator() {
           break;
         case 'tan':
           result = angleMode === 'deg' ? calc.tanDeg(inputValue) : Math.tan(inputValue);
+          break;
+        case 'sec':
+          const cosValue = angleMode === 'deg' ? calc.cosDeg(inputValue) : Math.cos(inputValue);
+          result = cosValue !== 0 ? 1 / cosValue : 'Error: Division by zero';
+          break;
+        case 'cosec':
+          const sinValue = angleMode === 'deg' ? calc.sinDeg(inputValue) : Math.sin(inputValue);
+          result = sinValue !== 0 ? 1 / sinValue : 'Error: Division by zero';
+          break;
+        case 'cot':
+          const tanValue = angleMode === 'deg' ? calc.tanDeg(inputValue) : Math.tan(inputValue);
+          result = tanValue !== 0 ? 1 / tanValue : 'Error: Division by zero';
           break;
         case 'ln':
           result = inputValue > 0 ? Math.log(inputValue) : 'Error: Invalid input';
@@ -318,9 +330,13 @@ export function Calculator() {
                 <Button_Function onClick={() => performFunction('sin')}>sin</Button_Function>
                 <Button_Function onClick={() => performFunction('cos')}>cos</Button_Function>
                 <Button_Function onClick={() => performFunction('tan')}>tan</Button_Function>
+                <Button_Function onClick={() => performFunction('sec')}>sec</Button_Function>
+                <Button_Function onClick={() => performFunction('cosec')}>cosec</Button_Function>
+                <Button_Function onClick={() => performFunction('cot')}>cot</Button_Function>
+
                 <Button_Function onClick={() => performFunction('ln')}>ln</Button_Function>
                 <Button_Function onClick={() => performFunction('log')}>log</Button_Function>
-                <Button_Special onClick={clear}>AC</Button_Special>
+                <Button_Special onClick={clear} className="col-span-4">AC</Button_Special>
 
                 <Button_Function onClick={() => performFunction('sqrt')}>√</Button_Function>
                 <Button_Function onClick={() => performFunction('cbrt')}>∛</Button_Function>
