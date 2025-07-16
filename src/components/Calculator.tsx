@@ -129,25 +129,101 @@ export function Calculator() {
 
       switch (func) {
         case 'sin':
-          result = angleMode === 'deg' ? calc.sinDeg(inputValue) : Math.sin(inputValue);
+          if (angleMode === 'deg') {
+            // Handle special angles for exact values
+            const normalizedAngle = inputValue % 360;
+            if (normalizedAngle === 0 || normalizedAngle === 180) result = 0;
+            else if (normalizedAngle === 90) result = 1;
+            else if (normalizedAngle === 270) result = -1;
+            else if (normalizedAngle === 30) result = 0.5;
+            else if (normalizedAngle === 150) result = 0.5;
+            else if (normalizedAngle === 210) result = -0.5;
+            else if (normalizedAngle === 330) result = -0.5;
+            else result = calc.sinDeg(inputValue);
+          } else {
+            result = Math.sin(inputValue);
+          }
           break;
         case 'cos':
-          result = angleMode === 'deg' ? calc.cosDeg(inputValue) : Math.cos(inputValue);
+          if (angleMode === 'deg') {
+            // Handle special angles for exact values
+            const normalizedAngle = inputValue % 360;
+            if (normalizedAngle === 90 || normalizedAngle === 270) result = 0;
+            else if (normalizedAngle === 0) result = 1;
+            else if (normalizedAngle === 180) result = -1;
+            else if (normalizedAngle === 60) result = 0.5;
+            else if (normalizedAngle === 120) result = -0.5;
+            else if (normalizedAngle === 240) result = -0.5;
+            else if (normalizedAngle === 300) result = 0.5;
+            else result = calc.cosDeg(inputValue);
+          } else {
+            result = Math.cos(inputValue);
+          }
           break;
         case 'tan':
-          result = angleMode === 'deg' ? calc.tanDeg(inputValue) : Math.tan(inputValue);
+          if (angleMode === 'deg') {
+            // Handle special angles for exact values
+            const normalizedAngle = inputValue % 360;
+            if (normalizedAngle === 90 || normalizedAngle === 270) result = 'Infinity';
+            else if (normalizedAngle === 0 || normalizedAngle === 180) result = 0;
+            else if (normalizedAngle === 45) result = 1;
+            else if (normalizedAngle === 135) result = -1;
+            else if (normalizedAngle === 225) result = 1;
+            else if (normalizedAngle === 315) result = -1;
+            else result = calc.tanDeg(inputValue);
+          } else {
+            result = Math.tan(inputValue);
+          }
           break;
         case 'sec':
-          const cosValue = angleMode === 'deg' ? calc.cosDeg(inputValue) : Math.cos(inputValue);
-          result = cosValue !== 0 ? 1 / cosValue : 'Error: Division by zero';
+          if (angleMode === 'deg') {
+            const normalizedAngle = inputValue % 360;
+            if (normalizedAngle === 90 || normalizedAngle === 270) result = 'Infinity';
+            else if (normalizedAngle === 0) result = 1;
+            else if (normalizedAngle === 180) result = -1;
+            else if (normalizedAngle === 60 || normalizedAngle === 300) result = 2;
+            else if (normalizedAngle === 120 || normalizedAngle === 240) result = -2;
+            else {
+              const cosValue = calc.cosDeg(inputValue);
+              result = Math.abs(cosValue) < 1e-10 ? 'Infinity' : 1 / cosValue;
+            }
+          } else {
+            const cosValue = Math.cos(inputValue);
+            result = Math.abs(cosValue) < 1e-10 ? 'Infinity' : 1 / cosValue;
+          }
           break;
         case 'cosec':
-          const sinValue = angleMode === 'deg' ? calc.sinDeg(inputValue) : Math.sin(inputValue);
-          result = sinValue !== 0 ? 1 / sinValue : 'Error: Division by zero';
+          if (angleMode === 'deg') {
+            const normalizedAngle = inputValue % 360;
+            if (normalizedAngle === 0 || normalizedAngle === 180) result = 'Infinity';
+            else if (normalizedAngle === 90) result = 1;
+            else if (normalizedAngle === 270) result = -1;
+            else if (normalizedAngle === 30 || normalizedAngle === 150) result = 2;
+            else if (normalizedAngle === 210 || normalizedAngle === 330) result = -2;
+            else {
+              const sinValue = calc.sinDeg(inputValue);
+              result = Math.abs(sinValue) < 1e-10 ? 'Infinity' : 1 / sinValue;
+            }
+          } else {
+            const sinValue = Math.sin(inputValue);
+            result = Math.abs(sinValue) < 1e-10 ? 'Infinity' : 1 / sinValue;
+          }
           break;
         case 'cot':
-          const tanValue = angleMode === 'deg' ? calc.tanDeg(inputValue) : Math.tan(inputValue);
-          result = tanValue !== 0 ? 1 / tanValue : 'Error: Division by zero';
+          if (angleMode === 'deg') {
+            const normalizedAngle = inputValue % 360;
+            if (normalizedAngle === 90 || normalizedAngle === 270) result = 0;
+            else if (normalizedAngle === 0 || normalizedAngle === 180) result = 'Infinity';
+            else if (normalizedAngle === 45 || normalizedAngle === 225) result = 1;
+            else if (normalizedAngle === 135 || normalizedAngle === 315) result = -1;
+            else {
+              const tanValue = calc.tanDeg(inputValue);
+              result = Math.abs(tanValue) < 1e-10 ? 'Infinity' : 1 / tanValue;
+            }
+          } else {
+            const tanValue = Math.tan(inputValue);
+            result = Math.abs(tanValue) < 1e-10 ? 'Infinity' : 1 / tanValue;
+          }
           break;
         case 'ln':
           result = inputValue > 0 ? Math.log(inputValue) : 'Error: Invalid input';
