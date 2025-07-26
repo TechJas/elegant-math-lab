@@ -10,7 +10,7 @@ There are several ways of editing your application.
 
 **Use Lovable**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/0e6312a5-b202-4d08-82fa-5a9d7d7dd2d3) and start prompting.
+Simply visit the [https://preview--elegant-math-lab.lovable.app/] and start prompting.
 
 Changes made via Lovable will be committed automatically to this repo.
 
